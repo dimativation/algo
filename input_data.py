@@ -8,9 +8,6 @@ timeframes = ['1H','15m','5m']
 for ticker in tickers[2:3]:
 	print(ticker)
 	input_functions.get_prices_stocks_daily(ticker)
-	for timeframe in timeframes:
-		print(timeframe)
-		input_functions.get_prices_stocks_intraday(ticker, timeframe)
 
 # for ticker in tickers:
 # 	daily = get_prices_stocks_daily(ticker)
