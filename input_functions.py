@@ -1,5 +1,3 @@
-import io
-
 import numpy as np
 import pandas as pd
 import requests
@@ -18,17 +16,12 @@ def get_prices_stocks_daily(ticker):
 
 	url = "https://www.alphavantage.co/query"
 	r = requests.get(url, param)
-	df = pd.read_csv(io.StringIO(r.content.decode()))
-	df.index = df['timestamp']
-	df = df.drop(columns = ['timestamp'])
-	df = df.iloc[::-1]
-	df['coef'] = df['adjusted_close']/df['close']
-	df['adj_open'] = df['coef']*df['open']
-	df['adj_high'] = df['coef']*df['high']
-	df['adj_low'] = df['coef'] * df['low']
-	df.to_csv('Data/'+ticker+'/'+ticker + '_1D.csv')
-
-get_prices_stocks_daily('TSLA')
+	url_content = r.content
+	no_header = url_content.split(b'\r\n')[1:]
+	no_header = b'\r\n'.join(no_header)
+	csv_file = open(f'Data/{ticker}/{ticker}_1D.csv', 'ab')
+	csv_file.write(no_header)
+	csv_file.close()
 
 
 def get_prices_stocks_intraday(ticker, timeframe):
@@ -136,13 +129,9 @@ def get_rsi(coin):
     return prices_rsi
 
 def create_folders(tickers):
-	if not os.path.exists('Data'):
-		os.makedirs('Data')
 	for ticker in tickers:
 		ticker = ticker.upper()
 		directory = f'Data/{ticker}'
 		folder_check = os.path.isdir(directory)
 		if folder_check == False:
 			os.mkdir(directory)
-
-create_folders(['TSLA'])
