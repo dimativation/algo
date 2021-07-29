@@ -74,66 +74,30 @@ def get_prices_stocks_intraday(ticker, timeframe):
 		csv_file.close()
 		sleep(10)
 
+def get_crypto_prices(ticker, timeframe):
+	ticker = ticker.upper()
+	param = {'function': 'CRYPTO_INTRADAY',
+	              'symbol': ticker,
+	              'market': 'USD',
+	              'interval': '60min',
+	              'apikey':'ULJ1MXXLOJ3FW17M',
+	              'datatype': 'csv'
+	    }
+	url = "https://www.alphavantage.co/query?"
+	r = requests.get(url, param)
+	url_content = r.content
+	print(url_content)
+	no_header = url_content.split(b'\r\n')
+	no_header = b'\r\n'.join(no_header)
+	csv_file = open(f'Data/{ticker}/{ticker}_{timeframe}.csv', 'ab')
+	csv_file.write(no_header)
+	csv_file.close()
+	df = pd.read_csv(f'Data/{ticker}/{ticker}_{timeframe}.csv')
+	df = df.iloc[::-1]
+	df.to_csv(f'Data/{ticker}/{ticker}_{timeframe}.csv', index = False)
 
 
-def get_sma20(coin):
-    url = f'https://www.alphavantage.co/query?function=SMA&symbol={coin}&interval=daily&time_period=9&series_type=open&apikey=UVE3MAJ1FWQE81B6'
-    r = requests.get(url)
-    data = r.json()
-    print(r.url)
-    print(data.keys())
-    all_dates = list(data['Technical Analysis: SMA'].keys())
-    sma_20 = data['Technical Analysis: SMA']
-#     print(sma_20)
-    prices_20 = []
-    i = 1
-    for key in sma_20:
-        if i == 3:
-            break
-        prices_20.append(float(sma_20[key]['SMA']))
-        i += 1
-        
-    print(prices_20)
-    return prices_20
-    
-
-def get_sma50(coin):
-
-    url = f'https://www.alphavantage.co/query?function=SMA&symbol={coin}&interval=daily&time_period=20&series_type=open&apikey=UVE3MAJ1FWQE81B6'
-    r = requests.get(url)
-    data = r.json()
-    print(r.url)
-    print(data.keys())
-    all_dates = list(data['Technical Analysis: SMA'].keys())
-    sma_50 = data['Technical Analysis: SMA']
-#     print(sma_20)
-    prices_50 = []
-    i = 1
-    for key in sma_50:
-        if i == 3:
-            break
-        prices_50.append(float(sma_50[key]['SMA']))
-        i += 1
-        
-    print(prices_50)
-    return prices_50
-    
-def get_rsi(coin):
-    url = f"https://www.alphavantage.co/query?function=RSI&symbol={coin}&interval=daily&time_period=14&series_type=open&apikey=UVE3MAJ1FWQE81B6"
-    r = requests.get(url)
-    print(r.url)
-    data = r.json()
-    rsi_14 = data['Technical Analysis: RSI']
-    prices_rsi = []
-    i = 1
-    for key in rsi_14:
-        if i == 3:
-            break
-        prices_rsi.append(float(rsi_14[key]['RSI']))
-        i += 1
-        
-    print(prices_rsi)
-    return prices_rsi
+get_crypto_prices("BTC", "60min")
 
 def create_folders(tickers):
 	if not os.path.exists('Data'):
@@ -145,4 +109,4 @@ def create_folders(tickers):
 		if folder_check == False:
 			os.mkdir(directory)
 
-create_folders(['TSLA'])
+# create_folders(['BTC'])

@@ -69,6 +69,8 @@ def main (ticker, timeframe, strategy):
         data = alphaClasses.AlphaVHourlyData(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')
     if timeframe == "1DC":
         data = alphaClasses.AlphaVDailyDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')
+    if timeframe == "60min":
+        data = alphaClasses.AlphaVIntradayDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')    
 
     cerebro = bt.Cerebro()
 
@@ -89,16 +91,15 @@ def main (ticker, timeframe, strategy):
     # for result in results:
     #     result.test_output()
 
-    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
-    # #figure = cerebro.plot()[0][0].savefig('data/TSLA/example.png')
+    figure = cerebro.plot()[0][0].savefig('data/TSLA/example.png')
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     testresults_dict['total_return'] = 100 * (cerebro.broker.getvalue() - 100000)/100000
     return testresults_dict
 
 
 if __name__ == '__main__':
-    timeframes = ["1D"]
-    tickers = ['TSLA']
+    timeframes = ["60min"]
+    tickers = ['BTC']
     strategies = [strategyClasses.SimpleStrategy, strategyClasses.BuyAndHold_1]
     log_df = pd.DataFrame()
     for strategy in strategies:
