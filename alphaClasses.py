@@ -40,10 +40,25 @@ class AlphaVDailyDataCrypto(bt.feeds.GenericCSVData):
         # ('adj-close', 5),
         ('close', 4),  # just testing
         ('volume', 5),
-        ('fromdate', datetime.datetime(2021, 2, 1)),
-        ('todate', datetime.datetime(2021, 6, 30))
+        
     )
 
+class AlphaVIntradayDataCrypto(bt.feeds.GenericCSVData):
+    params = (
+        ('timeframe', bt.TimeFrame.Minutes),
+        ('compression', 60),
+        ('nullvalue', float('NaN')),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
+        ('tmformat', '%H:%M'),
+        ('datetime', 0),
+        ('time', -1),
+        ('open', 1),
+        ('high', 2),
+        ('low', 3),
+        ('close', 4),  # just testing
+        ('volume', 5),
+        ('openinterest', -1),
+    )
 
 class AlphaVHourlyData(bt.feeds.GenericCSVData):
     params = (
@@ -62,8 +77,6 @@ class AlphaVHourlyData(bt.feeds.GenericCSVData):
         ('volume', 5),
         ('openinterest', -1),
         ('separator', ','),
-        ('fromdate', datetime.datetime(2019, 1, 1)),
-        ('todate', datetime.datetime(2021, 6, 30))
 
     )
 
