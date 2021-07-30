@@ -3,11 +3,6 @@ import pandas as pd
 import json
 
 
-# import configs for filepath
-with open('config.json', 'r') as config_file:
-    data = json.load(config_file)
-print (data)
-
 
 class SimpleStrategy(bt.Strategy):
     def __init__(self):
@@ -26,6 +21,11 @@ class SimpleStrategy(bt.Strategy):
         self.buycomm = None
         self.rsi = bt.indicators.RelativeStrengthIndex()
         self.log_csv = pd.DataFrame(columns=['date', 'order', 'price', 'cost', 'commission', 'gross', 'net'])
+        with open('config.json', 'r') as config_file:
+            data = json.load(config_file)
+        self.ticker = data['ticker']
+        self.timeframe = data['timeframe']
+        self.strategy = data['strategy']
 
     # define log function
     def log(self, txt=None, dt=None, order=None, price=None, cost=None, comission=None, gross=None, net=None):
@@ -46,19 +46,7 @@ class SimpleStrategy(bt.Strategy):
             # print("-------")
             self.log_csv = self.log_csv.append(df2)
         # print (self.log_csv)
-
-    # def close_signal(self):
-    #     if self.crossover < 0:
-    #         return True
-    #     else:
-    #         return False
-
-    # def buy_signal(self):
-    #     if self.crossover > 0:
-    #         return True
-    #     else:
-    #         return False
-
+        
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
             # Buy/Sell order submitted/accepted to/by broker - Nothing to do
@@ -133,9 +121,7 @@ class SimpleStrategy(bt.Strategy):
             #         self.order = self.close()
 
     def test_output(self):
-        # print("ebal tvoi rot")
-        # print(file)
-        self.log_csv.to_csv(file, index='date')
+        self.log_csv.to_csv(f'Data/{self.ticker}/{self.ticker}_{self.timeframe}_{self.strategy}.csv', index=False)
 
 
 # Buy and Hold 

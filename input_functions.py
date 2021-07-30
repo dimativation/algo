@@ -7,6 +7,14 @@ from time import time, sleep
 import os
 
 
+
+def check_existing(ticker, timeframe, reversed = False):
+	if reversed == False:
+		file_path = f'Data/{ticker}/{ticker}_{timeframe}.csv'
+	else:
+		file_path = f'Data/{ticker}/{ticker}_{timeframe}_reversed.csv'
+
+
 def get_prices_stocks_daily(ticker):
 	ticker = ticker.upper()
 	param = {'function': 'TIME_SERIES_DAILY_ADJUSTED',
@@ -26,9 +34,7 @@ def get_prices_stocks_daily(ticker):
 	df['adj_open'] = df['coef']*df['open']
 	df['adj_high'] = df['coef']*df['high']
 	df['adj_low'] = df['coef'] * df['low']
-	df.to_csv('Data/'+ticker+'/'+ticker + '_1D.csv')
-
-get_prices_stocks_daily('TSLA')
+	df.to_csv('Data/'+ticker+'/'+ticker + '_1D_reversed.csv')
 
 
 def get_prices_stocks_intraday(ticker, timeframe):
@@ -74,7 +80,26 @@ def get_prices_stocks_intraday(ticker, timeframe):
 		csv_file.close()
 		sleep(10)
 
-def get_crypto_prices(ticker, timeframe):
+def get_crypto_prices_daily(ticker):
+	ticker = ticker.upper()
+	param = {'function': 'DIGITAL_CURRENCY_DAILY',
+	              'symbol': ticker,
+	              'market': 'USD',
+	              'apikey':'ULJ1MXXLOJ3FW17M',
+	              'datatype': 'csv'
+	    }
+	url = "https://www.alphavantage.co/query"
+	r = requests.get(url, param)
+	url_content = r.content
+	print(url_content)
+	csv_file = open(f'Data/{ticker}/{ticker}_1D.csv', 'ab')
+	csv_file.write(url_content)
+	csv_file.close()
+	df = pd.read_csv(f'Data/{ticker}/{ticker}_1D.csv')
+	df = df.iloc[::-1]
+	df.to_csv(f'Data/{ticker}/{ticker}_1D_reversed.csv', index = False)
+
+def get_crypto_prices_intraday(ticker, timeframe):
 	ticker = ticker.upper()
 	param = {'function': 'CRYPTO_INTRADAY',
 	              'symbol': ticker,
@@ -87,17 +112,15 @@ def get_crypto_prices(ticker, timeframe):
 	r = requests.get(url, param)
 	url_content = r.content
 	print(url_content)
-	no_header = url_content.split(b'\r\n')
-	no_header = b'\r\n'.join(no_header)
 	csv_file = open(f'Data/{ticker}/{ticker}_{timeframe}.csv', 'ab')
-	csv_file.write(no_header)
+	csv_file.write(url_content)
 	csv_file.close()
 	df = pd.read_csv(f'Data/{ticker}/{ticker}_{timeframe}.csv')
 	df = df.iloc[::-1]
-	df.to_csv(f'Data/{ticker}/{ticker}_{timeframe}.csv', index = False)
+	df.to_csv(f'Data/{ticker}/{ticker}_{timeframe}_reversed.csv', index = False)
 
 
-get_crypto_prices("BTC", "60min")
+# get_crypto_prices("BTC", "60min")
 
 def create_folders(tickers):
 	if not os.path.exists('Data'):

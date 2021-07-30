@@ -20,8 +20,6 @@ class AlphaVDailyData(bt.feeds.GenericCSVData):
         ('div', 7),
         ('split', 8),
         ('openinterest', -1),
-        ('fromdate', datetime.datetime(2017, 1, 1)),
-        ('todate', datetime.datetime(2021, 6, 30))
     )
 
 
