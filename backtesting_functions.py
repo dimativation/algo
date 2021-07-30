@@ -10,13 +10,21 @@ import pandas as pd
 import alphaClasses
 import strategyClasses
 import numpy as np
+import analizers
 
 file = ''
 
 
+# tickers = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm', 'BTC', 'ETH', 'XRP', 'BCH', 'LTC', 'ADA', 'MATIC']
+stocks = list()
+tickers = ['BTC', 'ETH']
+crypto = ['BTC','ETH']
+# timeframes = ["1D", '4H', '2H', '1H', '30min', '15min', '5min', '1min']
+timeframes = ["1D" ]
+strategies = [strategyClasses.SimpleStrategy, strategyClasses.BuyAndHold_1]
+
+
 # sample strategy used for plotting the data
-
-
 def config_update(ticker, timeframe, strategy):
     data = {}
     data['ticker'] = ticker
@@ -25,52 +33,27 @@ def config_update(ticker, timeframe, strategy):
     with open("config.json", "w") as f:
         json.dump(data, f)
 
-def prepare_testresults(strategy, ticker, timeframe, thestrats):
-    ##  get values from analyzers
-    thestrat = thestrats[0]
-    # sharpe
-    sharpe = thestrat.analyzers.mysharpe.get_analysis()['sharperatio']
-    #roi
-    roi_dict = thestrat.analyzers.myroi.get_analysis()
-    rol_roi = thestrat.analyzers.myrollingroi.get_analysis()         
-    roi_annual_average  = 100 * np.average(list(roi_dict.values()))
-    roi_annual_max      = 100 * np.max(list(roi_dict.values()))
-    roi_annual_min      = 100 * np.min(list(roi_dict.values()))
-    roi_monthly_average = 100 * np.average(list(rol_roi.values()))
-    roi_monthly_max     = 100 * np.max(list(rol_roi.values()))
-    roi_monthly_min     = 100 * np.min(list(rol_roi.values()))
-    #drawdown
-    dd_dict = thestrat.analyzers.mydrawdown.get_analysis()
-    dd_max = dd_dict.max.drawdown
-    dd_maxlength = dd_dict.max.len
-    #put results in dict
-    results_dict = {}
-    results_dict['strategy'] = strategy.__name__
-    results_dict['ticker'] = ticker
-    results_dict['timeframe'] = timeframe
-    results_dict['roi_monthly_average'] = roi_monthly_average
-    results_dict['roi_monthly_max'] = roi_monthly_max
-    results_dict['roi_monthly_min'] = roi_monthly_min
-    results_dict['sharpe'] = sharpe
-    results_dict['dd_max'] = dd_max
-    results_dict['dd_maxlength'] = dd_maxlength
-    return results_dict
-
 
 def main (ticker, timeframe, strategy):
 
     if timeframe == "1D":
-        data = alphaClasses.AlphaVDailyData(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')
-    if timeframe == "5M":
-        data = alphaClasses.AlphaV5minData(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')
-    if timeframe == "15M":
-        data = alphaClasses.AlphaV15minData(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')
-    if timeframe == "1H":
-        data = alphaClasses.AlphaVHourlyData(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')
-    if timeframe == "1DC":
-        data = alphaClasses.AlphaVDailyDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')
-    if timeframe == "60min":
-        data = alphaClasses.AlphaVIntradayDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}.csv')    
+        if ticker in stocks:
+            data = alphaClasses.AlphaVDailyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+        elif ticker in crypto:
+            data = alphaClasses.AlphaVDailyDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+    elif timeframe == "5M":
+        data = alphaClasses.AlphaV5minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+    elif timeframe == "15M":
+        data = alphaClasses.AlphaV15minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+    elif timeframe == "1H":
+        data = alphaClasses.AlphaVHourlyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+    elif timeframe == "1DC":
+        data = alphaClasses.AlphaVDailyDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+    elif timeframe == "60min":
+        data = alphaClasses.AlphaVIntradayDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')    
+    else:
+        print("error ", ticker, timeframe)
+        return
 
     cerebro = bt.Cerebro()
 
@@ -83,10 +66,9 @@ def main (ticker, timeframe, strategy):
     cerebro.addanalyzer(bt.analyzers.DrawDown, _name='mydrawdown')
     cerebro.addanalyzer(bt.analyzers.AnnualReturn, _name='myroi')
     cerebro.addanalyzer(bt.analyzers.LogReturnsRolling, _name='myrollingroi', timeframe= bt.TimeFrame.Months)
-    config_update(ticker, timeframe, strategy.__name__)
     results = cerebro.run()
     # get values from analyzers
-    testresults_dict = prepare_testresults(strategy, ticker, timeframe, results)
+    testresults_dict = analizers.prepare_testresults(strategy, ticker, timeframe, results)
 
     # for result in results:
     #     result.test_output()
@@ -98,13 +80,11 @@ def main (ticker, timeframe, strategy):
 
 
 if __name__ == '__main__':
-    timeframes = ["60min"]
-    tickers = ['BTC']
-    strategies = [strategyClasses.SimpleStrategy, strategyClasses.BuyAndHold_1]
     log_df = pd.DataFrame()
     for strategy in strategies:
         for ticker in tickers:
             for timeframe in timeframes:
+                config_update(ticker, timeframe, strategy.__name__)
                 print(ticker, timeframe)
                 one_result_dict = main (ticker, timeframe, strategy)
                 log_df = log_df.append(one_result_dict, ignore_index=True)

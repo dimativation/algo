@@ -1,3 +1,0 @@
-dd_max,dd_maxlength,roi_monthly_average,roi_monthly_max,roi_monthly_min,sharpe,strategy,ticker,timeframe,total_return
-7.421883671862148,44.0,,,,,SimpleStrategy,BTC,60min,0.23910626473148294
-5.718761595181854,30.0,,,,,BuyAndHold_1,BTC,60min,11.580100000000005
