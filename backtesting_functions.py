@@ -118,5 +118,5 @@ if __name__ == '__main__':
                 log_df = log_df.append(one_result_dict, ignore_index=True)
     print(log_df.tail())
     date_file = datetime.datetime.now()
-    dt_string = date_file.strftime("%Y-%m-%d_%H:%M")
+    dt_string = date_file.strftime("%Y-%m-%d_%H%M%S")
     log_df.to_csv(f'results/result_overview_{dt_string}.csv', index = False)
