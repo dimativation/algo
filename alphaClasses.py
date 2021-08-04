@@ -37,8 +37,8 @@ class AlphaVDailyDataCrypto(bt.feeds.GenericCSVData):
         # ('close', 4),
         # ('adj-close', 5),
         ('close', 4),  # just testing
-        ('volume', 5),
-        
+        ('volume', -1),
+        ('openinterest', -1)
     )
 
 class AlphaVIntradayDataCrypto(bt.feeds.GenericCSVData):

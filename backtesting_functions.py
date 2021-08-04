@@ -66,7 +66,8 @@ def main (ticker, timeframe, strategy):
         if ticker in stocks:
             data = alphaClasses.AlphaVDailyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
         elif ticker in crypto:
-            data = alphaClasses.AlphaVDailyDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+            print("tut")
+            data = alphaClasses.AlphaVDailyDataCrypto(dataname=f'{ticker}_1day_new.csv')
     elif timeframe == "5M":
         if ticker in stocks:
             data = alphaClasses.AlphaV5minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
@@ -101,7 +102,7 @@ def main (ticker, timeframe, strategy):
     #     result.test_output()
     date_file = datetime.datetime.now()
     dt_string = date_file.strftime("%Y-%m-%d_%H:%M")
-    saveplots(cerebro, file_path = f'results/graphs/{ticker}_{timeframe}_{dt_string}.png') #run it
+    saveplots(cerebro, file_path = f'results/graphs/{ticker}_{timeframe}_{strategy}_{dt_string}.png', volume=False) #run it
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     testresults_dict['total_return'] = 100 * (cerebro.broker.getvalue() - 100000)/100000
     return testresults_dict
