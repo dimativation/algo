@@ -10,15 +10,15 @@ class AlphaVDailyData(bt.feeds.GenericCSVData):
         ('tmformat', '%H:%M'),
         ('datetime', 0),
         ('time', -1),
-        ('open', 10),
-        ('high', 11),
-        ('low', 12),
+        ('open', 1),
+        ('high', 2),
+        ('low', 3),
         # ('close', 4),
         # ('adj-close', 5),
-        ('close', 5),  # just testing
-        ('volume', 6),
-        ('div', 7),
-        ('split', 8),
+        ('close', 4),  # just testing
+        ('volume', -1),
+        ('div', -1),
+        ('split', -1),
         ('openinterest', -1),
     )
 
@@ -41,7 +41,7 @@ class AlphaVDailyDataCrypto(bt.feeds.GenericCSVData):
         ('openinterest', -1)
     )
 
-class AlphaVIntradayDataCrypto(bt.feeds.GenericCSVData):
+class AlphaV1hData(bt.feeds.GenericCSVData):
     params = (
         ('timeframe', bt.TimeFrame.Minutes),
         ('compression', 60),
@@ -54,9 +54,44 @@ class AlphaVIntradayDataCrypto(bt.feeds.GenericCSVData):
         ('high', 2),
         ('low', 3),
         ('close', 4),  # just testing
-        ('volume', 5),
+        ('volume', -1),
         ('openinterest', -1),
     )
+
+class AlphaV2hData(bt.feeds.GenericCSVData):
+    params = (
+        ('timeframe', bt.TimeFrame.Minutes),
+        ('compression', 120),
+        ('nullvalue', float('NaN')),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
+        ('tmformat', '%H:%M'),
+        ('datetime', 0),
+        ('time', -1),
+        ('open', 1),
+        ('high', 2),
+        ('low', 3),
+        ('close', 4),  # just testing
+        ('volume', -1),
+        ('openinterest', -1),
+    )
+
+class AlphaV4hData(bt.feeds.GenericCSVData):
+    params = (
+        ('timeframe', bt.TimeFrame.Minutes),
+        ('compression', 240),
+        ('nullvalue', float('NaN')),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
+        ('tmformat', '%H:%M'),
+        ('datetime', 0),
+        ('time', -1),
+        ('open', 1),
+        ('high', 2),
+        ('low', 3),
+        ('close', 4),  # just testing
+        ('volume', -1),
+        ('openinterest', -1),
+    )
+
 
 class AlphaVHourlyData(bt.feeds.GenericCSVData):
     params = (
@@ -72,7 +107,7 @@ class AlphaVHourlyData(bt.feeds.GenericCSVData):
         ('low', 3),
         ('close', 4),
 
-        ('volume', 5),
+        ('volume', -1),
         ('openinterest', -1),
         ('separator', ','),
 
@@ -84,7 +119,7 @@ class AlphaV15minData(bt.feeds.GenericCSVData):
         ('timeframe', bt.TimeFrame.Minutes),
         ('compression', 15),
         ('nullvalue', float('NaN')),
-        ('dtformat', '%d-%m-%y %H:%M'),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
         ('tmformat', '%H:%M'),
         ('datetime', 0),
         ('time', -1),
@@ -93,7 +128,7 @@ class AlphaV15minData(bt.feeds.GenericCSVData):
         ('low', 3),
         ('close', 4),
         # ('adj-close', 5),
-        ('volume', 5),
+        ('volume', -1),
         ('openinterest', -1),
     )
 
@@ -103,7 +138,7 @@ class AlphaV5minData(bt.feeds.GenericCSVData):
         ('timeframe', bt.TimeFrame.Minutes),
         ('compression', 5),
         ('nullvalue', float('NaN')),
-        ('dtformat', '%d-%m-%y %H:%M:%S'),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
         ('tmformat', '%H:%M'),
         ('datetime', 0),
         ('time', -1),
@@ -112,6 +147,43 @@ class AlphaV5minData(bt.feeds.GenericCSVData):
         ('low', 3),
         ('close', 4),
         # ('adj-close', 5),
-        ('volume', 5),
+        ('volume', -1),
+        ('openinterest', -1),
+    )
+
+
+class AlphaV1minData(bt.feeds.GenericCSVData):
+    params = (
+        ('timeframe', bt.TimeFrame.Minutes),
+        ('compression', 1),
+        ('nullvalue', float('NaN')),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
+        ('tmformat', '%H:%M'),
+        ('datetime', 0),
+        ('time', -1),
+        ('open', 1),
+        ('high', 2),
+        ('low', 3),
+        ('close', 4),
+        # ('adj-close', 5),
+        ('volume', -1),
+        ('openinterest', -1),
+    )
+
+class AlphaV30minData(bt.feeds.GenericCSVData):
+    params = (
+        ('timeframe', bt.TimeFrame.Minutes),
+        ('compression', 30),
+        ('nullvalue', float('NaN')),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
+        ('tmformat', '%H:%M'),
+        ('datetime', 0),
+        ('time', -1),
+        ('open', 1),
+        ('high', 2),
+        ('low', 3),
+        ('close', 4),
+        # ('adj-close', 5),
+        ('volume', -1),
         ('openinterest', -1),
     )

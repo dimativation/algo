@@ -17,18 +17,22 @@ file = ''
 
 
 
+stocks1 = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm']
+stocks = [x.upper() for x in stocks1]
+print(stocks)
+crypto = ["BTC", "ETH", "XRP", "BNB", "ADA"]
+tickers = stocks + crypto
+timeframes = ["1day", "4h", "2h", "1h", "30min", "15min", "5min", "1min"]
+
+
 # tickers = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm', 'BTC', 'ETH', 'XRP', 'BCH', 'LTC', 'ADA', 'MATIC']
-stocks = list()
-tickers = ['BTC', 'ETH']
-crypto = ['BTC','ETH']
 # timeframes = ["1D", '4H', '2H', '1H', '30min', '15min', '5min', '1min']
-timeframes = ["1D"]
-strategies = [strategyClasses.SimpleStrategy, strategyClasses.TestStrategy, strategyClasses.BuyAndHold_1]
+strategies = [strategyClasses.SimpleStrategy, strategyClasses.BuyAndHold_1]
 
 
 
 def saveplots(cerebro, numfigs=1, iplot=True, start=None, end=None,
-             width=16, height=9, dpi=300, tight=True, use=None, file_path = 'test', **kwargs):
+             width=20, height=10, dpi=500, tight=True, use=None, file_path = 'test', **kwargs):
 
         from backtrader import plot
         if cerebro.p.oldsync:
@@ -61,24 +65,23 @@ def config_update(ticker, timeframe, strategy):
 
 
 def main (ticker, timeframe, strategy):
-
-    if timeframe == "1D":
-        if ticker in stocks:
-            data = alphaClasses.AlphaVDailyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
-        elif ticker in crypto:
-            print("tut")
-            data = alphaClasses.AlphaVDailyDataCrypto(dataname=f'{ticker}_1day_new.csv')
-    elif timeframe == "5M":
-        if ticker in stocks:
-            data = alphaClasses.AlphaV5minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
-        elif ticker in crypto:
-            data = alphaClasses.AlphaVIntradayDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')        
-    elif timeframe == "15M":
-        data = alphaClasses.AlphaV15minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
-    elif timeframe == "1H":
-        data = alphaClasses.AlphaVHourlyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
-    elif timeframe == "60min":
-        data = alphaClasses.AlphaVIntradayDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')    
+    ticker = ticker.upper()
+    if timeframe == "1day":
+        data = alphaClasses.AlphaVDailyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+    elif timeframe == "30min":
+        data = alphaClasses.AlphaV30minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+    elif timeframe == "5min":
+        data = alphaClasses.AlphaV5minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+    elif timeframe == "15min":
+        data = alphaClasses.AlphaV15minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+    elif timeframe == "1h":
+        data = alphaClasses.AlphaV1hData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+    elif timeframe == "2h":
+        data = alphaClasses.AlphaV2hData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+    elif timeframe == "4h": 
+        data = alphaClasses.AlphaV4hData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+    elif timeframe == "1min":
+        data = alphaClasses.AlphaV1minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')       
     else:
         print("error ", ticker, timeframe)
         return
@@ -105,6 +108,7 @@ def main (ticker, timeframe, strategy):
     saveplots(cerebro, file_path = f'results/graphs/{ticker}_{timeframe}_{strategy}_{dt_string}.png', volume=False) #run it
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     testresults_dict['total_return'] = 100 * (cerebro.broker.getvalue() - 100000)/100000
+    testresults_dict['portfolio_return'] = cerebro.broker.getvalue()
     return testresults_dict
 
 
