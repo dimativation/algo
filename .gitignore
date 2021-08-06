@@ -10,3 +10,7 @@ __pycache__
 
 # Ignore results folder
 results
+
+
+.idea
+
