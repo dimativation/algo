@@ -1,0 +1,12 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore pycache folder
+__pycache__
+
+
+# Ignore files related to API keys
+.env
+
+# Ignore results folder
+results
