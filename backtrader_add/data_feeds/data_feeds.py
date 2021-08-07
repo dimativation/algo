@@ -1,9 +1,7 @@
 import backtrader as bt
 import os, sys
-import datetime
-import pandas as pd
 
-class AlphaVDailyData(bt.feeds.GenericCSVData):
+class Data1day(bt.feeds.GenericCSVData):
     params = (
         ('nullvalue', float('NaN')),
         ('dtformat', '%Y-%m-%d'),
@@ -23,59 +21,7 @@ class AlphaVDailyData(bt.feeds.GenericCSVData):
     )
 
 
-# Define a Custom Datafeed Class
-class AlphaVDailyDataCrypto(bt.feeds.GenericCSVData):
-    params = (
-        ('nullvalue', float('NaN')),
-        ('dtformat', '%Y-%m-%d'),
-        ('tmformat', '%H:%M'),
-        ('datetime', 0),
-        ('time', -1),
-        ('open', 1),
-        ('high', 2),
-        ('low', 3),
-        # ('close', 4),
-        # ('adj-close', 5),
-        ('close', 4),  # just testing
-        ('volume', -1),
-        ('openinterest', -1)
-    )
-
-class AlphaV1hData(bt.feeds.GenericCSVData):
-    params = (
-        ('timeframe', bt.TimeFrame.Minutes),
-        ('compression', 60),
-        ('nullvalue', float('NaN')),
-        ('dtformat', '%Y-%m-%d %H:%M:%S'),
-        ('tmformat', '%H:%M'),
-        ('datetime', 0),
-        ('time', -1),
-        ('open', 1),
-        ('high', 2),
-        ('low', 3),
-        ('close', 4),  # just testing
-        ('volume', -1),
-        ('openinterest', -1),
-    )
-
-class AlphaV2hData(bt.feeds.GenericCSVData):
-    params = (
-        ('timeframe', bt.TimeFrame.Minutes),
-        ('compression', 120),
-        ('nullvalue', float('NaN')),
-        ('dtformat', '%Y-%m-%d %H:%M:%S'),
-        ('tmformat', '%H:%M'),
-        ('datetime', 0),
-        ('time', -1),
-        ('open', 1),
-        ('high', 2),
-        ('low', 3),
-        ('close', 4),  # just testing
-        ('volume', -1),
-        ('openinterest', -1),
-    )
-
-class AlphaV4hData(bt.feeds.GenericCSVData):
+class Data4hour(bt.feeds.GenericCSVData):
     params = (
         ('timeframe', bt.TimeFrame.Minutes),
         ('compression', 240),
@@ -93,28 +39,62 @@ class AlphaV4hData(bt.feeds.GenericCSVData):
     )
 
 
-class AlphaVHourlyData(bt.feeds.GenericCSVData):
+class Data2hour(bt.feeds.GenericCSVData):
+    params = (
+        ('timeframe', bt.TimeFrame.Minutes),
+        ('compression', 120),
+        ('nullvalue', float('NaN')),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
+        ('tmformat', '%H:%M'),
+        ('datetime', 0),
+        ('time', -1),
+        ('open', 1),
+        ('high', 2),
+        ('low', 3),
+        ('close', 4),  # just testing
+        ('volume', -1),
+        ('openinterest', -1),
+    )
+
+class Data1hour(bt.feeds.GenericCSVData):
     params = (
         ('timeframe', bt.TimeFrame.Minutes),
         ('compression', 60),
         ('nullvalue', float('NaN')),
         ('dtformat', '%Y-%m-%d %H:%M:%S'),
-        ('tmformat', '%H:%M:%S'),
+        ('tmformat', '%H:%M'),
+        ('datetime', 0),
+        ('time', -1),
+        ('open', 1),
+        ('high', 2),
+        ('low', 3),
+        ('close', 4),  # just testing
+        ('volume', -1),
+        ('openinterest', -1),
+    )
+
+
+
+class Data30min(bt.feeds.GenericCSVData):
+    params = (
+        ('timeframe', bt.TimeFrame.Minutes),
+        ('compression', 30),
+        ('nullvalue', float('NaN')),
+        ('dtformat', '%Y-%m-%d %H:%M:%S'),
+        ('tmformat', '%H:%M'),
         ('datetime', 0),
         ('time', -1),
         ('open', 1),
         ('high', 2),
         ('low', 3),
         ('close', 4),
-
+        # ('adj-close', 5),
         ('volume', -1),
         ('openinterest', -1),
-        ('separator', ','),
-
     )
 
 
-class AlphaV15minData(bt.feeds.GenericCSVData):
+class Data15min(bt.feeds.GenericCSVData):
     params = (
         ('timeframe', bt.TimeFrame.Minutes),
         ('compression', 15),
@@ -133,7 +113,7 @@ class AlphaV15minData(bt.feeds.GenericCSVData):
     )
 
 
-class AlphaV5minData(bt.feeds.GenericCSVData):
+class Data5min(bt.feeds.GenericCSVData):
     params = (
         ('timeframe', bt.TimeFrame.Minutes),
         ('compression', 5),
@@ -152,7 +132,7 @@ class AlphaV5minData(bt.feeds.GenericCSVData):
     )
 
 
-class AlphaV1minData(bt.feeds.GenericCSVData):
+class Data1min(bt.feeds.GenericCSVData):
     params = (
         ('timeframe', bt.TimeFrame.Minutes),
         ('compression', 1),
@@ -170,20 +150,3 @@ class AlphaV1minData(bt.feeds.GenericCSVData):
         ('openinterest', -1),
     )
 
-class AlphaV30minData(bt.feeds.GenericCSVData):
-    params = (
-        ('timeframe', bt.TimeFrame.Minutes),
-        ('compression', 30),
-        ('nullvalue', float('NaN')),
-        ('dtformat', '%Y-%m-%d %H:%M:%S'),
-        ('tmformat', '%H:%M'),
-        ('datetime', 0),
-        ('time', -1),
-        ('open', 1),
-        ('high', 2),
-        ('low', 3),
-        ('close', 4),
-        # ('adj-close', 5),
-        ('volume', -1),
-        ('openinterest', -1),
-    )

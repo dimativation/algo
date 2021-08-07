@@ -7,27 +7,33 @@ import backtrader as bt
 import os, sys
 import datetime
 import pandas as pd
-import alphaClasses
-import strategyClasses
 import numpy as np
-import analizers
+import strategy_analizers.analizers as analizers
+
+
+import backtrader_add.data_feeds.data_feeds as df
+
+from backtrader_add.strategies.simple_strategy import SimpleStrategy
+from backtrader_add.strategies.test_strategy import TestStrategy
+from backtrader_add.strategies.buy_and_hold import BuyAndHold_1
 
 file = ''
 
 
 
 
-stocks1 = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm']
+stocks1 = ['Aapl','Msft']
+# ['Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm']
 stocks = [x.upper() for x in stocks1]
 print(stocks)
 crypto = ["BTC", "ETH", "XRP", "BNB", "ADA"]
-tickers = stocks + crypto
+tickers = stocks
 timeframes = ["1day", "4h", "2h", "1h", "30min", "15min", "5min", "1min"]
 
 
 # tickers = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm', 'BTC', 'ETH', 'XRP', 'BCH', 'LTC', 'ADA', 'MATIC']
 # timeframes = ["1D", '4H', '2H', '1H', '30min', '15min', '5min', '1min']
-strategies = [strategyClasses.SimpleStrategy, strategyClasses.BuyAndHold_1]
+strategies = [SimpleStrategy, BuyAndHold_1]
 
 
 
@@ -67,21 +73,21 @@ def config_update(ticker, timeframe, strategy):
 def main (ticker, timeframe, strategy):
     ticker = ticker.upper()
     if timeframe == "1day":
-        data = alphaClasses.AlphaVDailyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data1day(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "30min":
-        data = alphaClasses.AlphaV30minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data30min(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "5min":
-        data = alphaClasses.AlphaV5minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data5min(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "15min":
-        data = alphaClasses.AlphaV15minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data15min(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "1h":
-        data = alphaClasses.AlphaV1hData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data1hour(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "2h":
-        data = alphaClasses.AlphaV2hData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data2hour(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "4h": 
-        data = alphaClasses.AlphaV4hData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data4hour(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "1min":
-        data = alphaClasses.AlphaV1minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_new.csv')       
+        data = df.Data1min(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')       
     else:
         print("error ", ticker, timeframe)
         return
