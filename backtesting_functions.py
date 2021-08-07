@@ -1,21 +1,20 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import json
-
-import backtrader as bt
-import os, sys
-import datetime
-import pandas as pd
-import alphaClasses
-import strategyClasses
-import numpy as np
 import analizers
+import backtrader as bt
+import datetime
+import json
+import numpy as np
+import os
+import pandas as pd
+import sys
 
-file = ''
+import backtrader_add.data_feeds.alpha_data_feeds as alpha_df
 
-
-
+from backtrader_add.strategies.simple_strategy import SimpleStrategy
+from backtrader_add.strategies.test_strategy import TestStrategy
+from backtrader_add.strategies.buy_and_hold import BuyAndHold_1
 
 # tickers = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm', 'BTC', 'ETH', 'XRP', 'BCH', 'LTC', 'ADA', 'MATIC']
 stocks = list()
@@ -23,9 +22,7 @@ tickers = ['BTC', 'ETH']
 crypto = ['BTC','ETH']
 # timeframes = ["1D", '4H', '2H', '1H', '30min', '15min', '5min', '1min']
 timeframes = ["1D"]
-strategies = [strategyClasses.SimpleStrategy, strategyClasses.TestStrategy, strategyClasses.BuyAndHold_1]
-
-
+strategies = [SimpleStrategy, TestStrategy, BuyAndHold_1]
 
 def saveplots(cerebro, numfigs=1, iplot=True, start=None, end=None,
              width=16, height=9, dpi=300, tight=True, use=None, file_path = 'test', **kwargs):
@@ -49,9 +46,14 @@ def saveplots(cerebro, numfigs=1, iplot=True, start=None, end=None,
                 f.savefig(file_path, bbox_inches='tight')
         return figs
 
-
-# sample strategy used for plotting the data
 def config_update(ticker, timeframe, strategy):
+    """TODO
+
+    Args:
+        ticker ([type]): [description]
+        timeframe ([type]): [description]
+        strategy ([type]): [description]
+    """
     data = {}
     data['ticker'] = ticker
     data['timeframe'] = timeframe
@@ -61,23 +63,32 @@ def config_update(ticker, timeframe, strategy):
 
 
 def main (ticker, timeframe, strategy):
+    """TODO
 
+    Args:
+        ticker ([type]): [description]
+        timeframe ([type]): [description]
+        strategy ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     if timeframe == "1D":
         if ticker in stocks:
-            data = alphaClasses.AlphaVDailyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+            data = alpha_df.VDailyData(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_reversed.csv')
         elif ticker in crypto:
-            data = alphaClasses.AlphaVDailyDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+            data = alpha_df.VDailyDataCrypto(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_reversed.csv')
     elif timeframe == "5M":
         if ticker in stocks:
-            data = alphaClasses.AlphaV5minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+            data = alpha_df.V5minData(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_reversed.csv')
         elif ticker in crypto:
-            data = alphaClasses.AlphaVIntradayDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')        
+            data = alpha_df.VIntradayDataCrypto(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_reversed.csv')        
     elif timeframe == "15M":
-        data = alphaClasses.AlphaV15minData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+        data = alpha_df.V15minData(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_reversed.csv')
     elif timeframe == "1H":
-        data = alphaClasses.AlphaVHourlyData(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')
+        data = alpha_df.VHourlyData(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_reversed.csv')
     elif timeframe == "60min":
-        data = alphaClasses.AlphaVIntradayDataCrypto(dataname=f'data/{ticker}/{ticker}_{timeframe}_reversed.csv')    
+        data = alpha_df.VIntradayDataCrypto(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_reversed.csv')    
     else:
         print("error ", ticker, timeframe)
         return
