@@ -17,20 +17,25 @@ tickers_split = list()
 timeframes = ["1day", "4h", "2h", "1h", "30min", "15min", "5min", "1min"]
 
 def create_folders(tickers):
-	if not os.path.exists('Data'):
-		os.makedirs('Data')
 	for ticker in tickers:
 		ticker = ticker.upper()
 		if ticker in crypto:
-			directory = f'Data/{ticker[:-4]}'
+			directory = f'{ticker[:-4]}'
 		else:
-			directory = f'Data/{ticker}'
+			directory = f'{ticker}'
 		folder_check = os.path.isdir(directory)
 		if folder_check == False:
 			os.mkdir(directory)
+
 create_folders(stocks + crypto)
 
 def split_tickers():
+	for i in range(0, len(all_tickers)):
+		path = f"{all_tickers[i]}"
+		if os.path.exists(path):
+			print (all_tickers[i])
+
+
 	for i in range(0,len(all_tickers),8):
 		
 		st = all_tickers[i:i+8]
@@ -58,9 +63,9 @@ for timeframe in timeframes:
 			for ticker in st:
 				print(ticker, timeframe)
 				if ticker in crypto:
-					main_pandas.loc[ticker].to_csv(f"Data/{ticker[:-4]}/{ticker[:-4]}_{timeframe}_new.csv")
+					main_pandas.loc[ticker].to_csv(f"input_data/{ticker[:-4]}/{ticker[:-4]}_{timeframe}_new.csv")
 				else:
-					main_pandas.loc[ticker].to_csv(f"Data/{ticker}/{ticker}_{timeframe}_new.csv")
+					main_pandas.loc[ticker].to_csv(f"input_data/{ticker}/{ticker}_{timeframe}_new.csv")
 		except Exception as e:
 			print(e)
 		sleep(65)
