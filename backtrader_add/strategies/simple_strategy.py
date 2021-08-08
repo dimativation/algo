@@ -1,6 +1,7 @@
 import backtrader as bt
 import pandas as pd
 import json
+import os
 
 class SimpleStrategy(bt.Strategy):
     def __init__(self):
@@ -119,4 +120,10 @@ class SimpleStrategy(bt.Strategy):
             #         self.order = self.close()
 
     def test_output(self):
-        self.log_csv.to_csv(f'Data/{self.ticker}/{self.ticker}_{self.timeframe}_{self.strategy}.csv', index=False)
+        if not os.path.exists('Data'):
+            os.makedirs('Data')
+        if not os.path.exists(f'Data/{self.ticker}'):
+            os.makedirs(f'Data/{self.ticker}')
+        if not os.path.exists(f'Data/{self.ticker}/{self.strategy}'):
+            os.makedirs(f'Data/{self.ticker}/{self.strategy}')
+        self.log_csv.to_csv(f'Data/{self.ticker}/{self.strategy}/{self.ticker}_{self.timeframe}_{self.strategy}.csv', index=False)

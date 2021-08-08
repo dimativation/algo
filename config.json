@@ -1,1 +1,1 @@
-{"ticker": "MSFT", "timeframe": "1min", "strategy": "BuyAndHold_1"}
+{"ticker": "AAPL", "timeframe": "1day", "strategy": "SimpleStrategy"}

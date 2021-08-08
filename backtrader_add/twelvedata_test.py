@@ -8,34 +8,30 @@ td = TDClient(apikey="c822604c71594044b6d972cf97e9dae8")
 stocks = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm']
 crypto = ["BTC/USD", "ETH/USD", "XRP/USD", "BNB/USD", "ADA/USD", "MATIC/USD"]
 
+all_tickers = []
 #EUR/USD, GBP/USD, XAU/USD
-
-all_tickers = stocks + crypto
 
 tickers_split = list()
 
 timeframes = ["1day", "4h", "2h", "1h", "30min", "15min", "5min", "1min"]
 
 def create_folders(tickers):
+	if not os.path.exists('input_data'):
+		os.makedirs('input_data')
 	for ticker in tickers:
-		ticker = ticker.upper()
 		if ticker in crypto:
-			directory = f'{ticker[:-4]}'
+			directory = f'input_data/{ticker.upper()[:-4]}'
 		else:
-			directory = f'{ticker}'
+			directory = f'input_data/{ticker.upper()}'
 		folder_check = os.path.isdir(directory)
 		if folder_check == False:
 			os.mkdir(directory)
+			all_tickers.append(ticker)
 
 create_folders(stocks + crypto)
 
+
 def split_tickers():
-	for i in range(0, len(all_tickers)):
-		path = f"{all_tickers[i]}"
-		if os.path.exists(path):
-			print (all_tickers[i])
-
-
 	for i in range(0,len(all_tickers),8):
 		
 		st = all_tickers[i:i+8]

@@ -1,3 +1,5 @@
+import os
+
 import backtrader as bt
 import pandas as pd
 import json
@@ -59,4 +61,10 @@ class BuyAndHold_1(bt.Strategy):
         self.log('OPERATION PROFIT, GROSS %.2f, NET %.2f' % (trade.pnl, trade.pnlcomm))
     
     def test_output(self):
-        self.log_csv.to_csv(file, index='date')
+        if not os.path.exists('Data'):
+            os.makedirs('Data')
+        if not os.path.exists(f'Data/{self.ticker}'):
+            os.makedirs(f'Data/{self.ticker}')
+        if not os.path.exists(f'Data/{self.ticker}/{self.strategy}'):
+            os.makedirs(f'Data/{self.ticker}/{self.strategy}')
+        self.log_csv.to_csv(f'Data/{self.ticker}/{self.strategy}/{self.ticker}_{self.timeframe}_{self.strategy}.csv', index=False)

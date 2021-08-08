@@ -33,7 +33,7 @@ timeframes = ["1day", "4h", "2h", "1h", "30min", "15min", "5min", "1min"]
 
 # tickers = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm', 'BTC', 'ETH', 'XRP', 'BCH', 'LTC', 'ADA', 'MATIC']
 # timeframes = ["1D", '4H', '2H', '1H', '30min', '15min', '5min', '1min']
-strategies = [SimpleStrategy, BuyAndHold_1]
+strategies = [SimpleStrategy, TestStrategy]
 
 
 
@@ -73,21 +73,21 @@ def config_update(ticker, timeframe, strategy):
 def main (ticker, timeframe, strategy):
     ticker = ticker.upper()
     if timeframe == "1day":
-        data = df.Data1day(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data1day(dataname=f'backtrader_add/input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "30min":
-        data = df.Data30min(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data30min(dataname=f'backtrader_add/input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "5min":
-        data = df.Data5min(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data5min(dataname=f'backtrader_add/input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "15min":
-        data = df.Data15min(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data15min(dataname=f'backtrader_add/input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "1h":
-        data = df.Data1hour(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data1hour(dataname=f'backtrader_add/input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "2h":
-        data = df.Data2hour(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data2hour(dataname=f'backtrader_add/input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "4h": 
-        data = df.Data4hour(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')
+        data = df.Data4hour(dataname=f'backtrader_add/input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     elif timeframe == "1min":
-        data = df.Data1min(dataname=f'input_data/{ticker}/{ticker}_{timeframe}_new.csv')       
+        data = df.Data1min(dataname=f'backtrader_add/input_data/{ticker}/{ticker}_{timeframe}_new.csv')
     else:
         print("error ", ticker, timeframe)
         return
@@ -107,8 +107,8 @@ def main (ticker, timeframe, strategy):
     # get values from analyzers
     testresults_dict = analizers.prepare_testresults(strategy, ticker, timeframe, results)
 
-    # for result in results:
-    #     result.test_output()
+    for result in results:
+        result.test_output()
     date_file = datetime.datetime.now()
     dt_string = date_file.strftime("%Y-%m-%d_%H:%M")
     saveplots(cerebro, file_path = f'results/graphs/{ticker}_{timeframe}_{strategy}_{dt_string}.png', volume=False) #run it
@@ -120,8 +120,11 @@ def main (ticker, timeframe, strategy):
 
 if __name__ == '__main__':
     log_df = pd.DataFrame()
+
     for strategy in strategies:
         for ticker in tickers:
+            if os.path.exists(f'Data/{ticker}/{strategy.__name__}'):
+                continue
             for timeframe in timeframes:
                 config_update(ticker, timeframe, strategy.__name__)
                 print(ticker, timeframe)
@@ -130,4 +133,6 @@ if __name__ == '__main__':
     print(log_df.tail())
     date_file = datetime.datetime.now()
     dt_string = date_file.strftime("%Y-%m-%d_%H%M%S")
+    if not os.path.exists('results'):
+        os.makedirs('results')
     log_df.to_csv(f'results/result_overview_{dt_string}.csv', index = False)
