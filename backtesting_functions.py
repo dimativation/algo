@@ -16,24 +16,29 @@ import backtrader_add.data_feeds.data_feeds as df
 from backtrader_add.strategies.simple_strategy import SimpleStrategy
 from backtrader_add.strategies.test_strategy import TestStrategy
 from backtrader_add.strategies.buy_and_hold import BuyAndHold_1
+from backtrader_add.strategies.trendtrack_strategy import SimpleTrendTrackingStrategy
 
 file = ''
 
 
 
 
-stocks1 = ['Aapl','Msft']
-# ['Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm']
-stocks = [x.upper() for x in stocks1]
-print(stocks)
-crypto = ["BTC", "ETH", "XRP", "BNB", "ADA"]
-tickers = stocks
-timeframes = ["1day", "4h", "2h", "1h", "30min", "15min", "5min", "1min"]
+# # stocks1 = ['Msft', 'Aapl']
+# # ['Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm']
+# stocks = [x.upper() for x in stocks1]
+# print(stocks)
+# crypto = ["BTC", "ETH", "XRP", "BNB", "ADA"]
+# tickers = stocks
+# timeframes = ["1day"]
 
 
 # tickers = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm', 'BTC', 'ETH', 'XRP', 'BCH', 'LTC', 'ADA', 'MATIC']
 # timeframes = ["1D", '4H', '2H', '1H', '30min', '15min', '5min', '1min']
-strategies = [SimpleStrategy, BuyAndHold_1]
+
+tickers_input = ['Aapl','Msft','Wmt','Nke','Sbux','Tsla','Gme','Amc','C','V','Jpm', 'BTC', 'ETH', 'XRP']
+tickers = [x.upper() for x in tickers_input]
+timeframes = ["1day", '4h', '2h', '1h']
+strategies = [SimpleTrendTrackingStrategy, SimpleStrategy, BuyAndHold_1]
 
 
 
@@ -97,6 +102,7 @@ def main (ticker, timeframe, strategy):
     cerebro.adddata(data)
     cerebro.broker.set_cash(100000.0)
     cerebro.addsizer(bt.sizers.PercentSizer, percents=95)
+    #cerebro.addsizer(bt.sizers.SizerFix, stake=10)
     cerebro.addstrategy(strategy)
     # Add Analyzers
     cerebro.addanalyzer(bt.analyzers.SharpeRatio, _name='mysharpe', timeframe= bt.TimeFrame.Months)
@@ -104,6 +110,8 @@ def main (ticker, timeframe, strategy):
     cerebro.addanalyzer(bt.analyzers.AnnualReturn, _name='myroi')
     cerebro.addanalyzer(bt.analyzers.LogReturnsRolling, _name='myrollingroi', timeframe= bt.TimeFrame.Months)
     results = cerebro.run()
+    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+    #cerebro.plot(volume=False)
     # get values from analyzers
     testresults_dict = analizers.prepare_testresults(strategy, ticker, timeframe, results)
 
@@ -111,7 +119,7 @@ def main (ticker, timeframe, strategy):
     #     result.test_output()
     date_file = datetime.datetime.now()
     dt_string = date_file.strftime("%Y-%m-%d_%H:%M")
-    saveplots(cerebro, file_path = f'results/graphs/{ticker}_{timeframe}_{strategy}_{dt_string}.png', volume=False) #run it
+    #saveplots(cerebro, file_path = f'results/graphs/{ticker}_{timeframe}_{strategy}_{dt_string}.png', volume=False) #run it
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     testresults_dict['total_return'] = 100 * (cerebro.broker.getvalue() - 100000)/100000
     testresults_dict['portfolio_return'] = cerebro.broker.getvalue()
